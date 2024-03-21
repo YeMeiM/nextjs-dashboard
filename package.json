@@ -7,7 +7,9 @@
     "prettier:check": "prettier --check --ignore-unknown .",
     "start": "next start",
     "seed": "node -r dotenv/config ./scripts/seed.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "predev": "ts-node --project ./tsconfig.node.json ./scripts/genAntdCss.tsx",
+    "prebuild": "cross-env NODE_ENV=production ts-node --project ./tsconfig.node.json ./scripts/genAntdCss.tsx"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",

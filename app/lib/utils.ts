@@ -1,4 +1,4 @@
-import { Revenue } from './definitions';
+import {Revenue} from './definitions';
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {
@@ -32,14 +32,14 @@ export const generateYAxis = (revenue: Revenue[]) => {
     yAxisLabels.push(`$${i / 1000}K`);
   }
 
-  return { yAxisLabels, topLabel };
+  return {yAxisLabels, topLabel};
 };
 
 export const generatePagination = (currentPage: number, totalPages: number) => {
   // If the total number of pages is 7 or less,
   // display all pages without any ellipsis.
   if (totalPages <= 7) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
+    return Array.from({length: totalPages}, (_, i) => i + 1);
   }
 
   // If the current page is among the first 3 pages,
@@ -67,3 +67,37 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages,
   ];
 };
+
+/**
+ * 暂停
+ * @param ms 暂停时间
+ */
+export function sleep(ms = 500) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+/**
+ * 将迭代器转为流数据
+ * @param iterator
+ */
+export function iteratorToStream<T>(iterator: Generator<T> | AsyncGenerator<T>) {
+  return new ReadableStream<T>({
+    async pull(controller) {
+      const {done, value} = await iterator.next();
+      if (done) controller.close();
+      else controller.enqueue(value);
+    }
+  })
+}
+
+/**
+ * 生成一个文字迭代器
+ * @param text
+ * @param wait
+ */
+export async function* textIterator(text: string, wait = 20) {
+  for (let i = 0; i < text.length; i ++) {
+    yield text[i];
+    await sleep(wait);
+  }
+}
